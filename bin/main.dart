@@ -6,11 +6,8 @@ import 'dart:convert';
 
 void main(List<String> arguments) async {
   var config = await ConfigurationReader.readConfiguration();
-
   var client = TogglClient(config.apiKey, config.email);
-
   var body = await client.getDetailsReport('1636155');
-
   var parsedJson = jsonDecode(body);
 
   List<dynamic> entries = parsedJson['data'];
