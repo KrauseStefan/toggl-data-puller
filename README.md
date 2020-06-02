@@ -3,3 +3,6 @@
 Small tool to pull data from toggl.
 
 This is Work in progress, the intention is to in the end af first half of a pipeline to sync data into JIRA.
+
+To run: `dart bin/main.dart`
+To run tests: `pub run test test`
