@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:togglTool/TogglError.dart';
+import 'package:intl/intl.dart';
 
 const domain = 'toggl.com';
 const reportsBaseUrl = 'reports/api/v2';
@@ -47,22 +48,33 @@ class TogglClient {
   }
 
   Future<Map<String, dynamic>> getSummaryReport(String workspaceId) async {
+    var timeSpan = _getLastWeekTimeSpan();
     return await _sendRequest(summaryUrl, {
       'user_agent': _email,
       'workspace_id': workspaceId,
-      'since': '2020-05-04', // ISO 8601 date (YYYY-MM-DD) format. Defaults to today - 6 days.
-      'until': '2020-05-10', // ISO 8601 date (YYYY-MM-DD) format.
+      'since': timeSpan[0], // ISO 8601 date (YYYY-MM-DD) format. Defaults to today - 6 days.
+      'until': timeSpan[1], // ISO 8601 date (YYYY-MM-DD) format.
     });
   }
 
   Future<Map<String, dynamic>> getDetailsReport(String workspaceId) async {
+    var timeSpan = _getLastWeekTimeSpan();
     return await _sendRequest(detailsUrl, {
       'user_agent': _email,
       'workspace_id': workspaceId,
-      'since': '2020-05-04', // ISO 8601 date (YYYY-MM-DD) format. Defaults to today - 6 days.
-      'until': '2020-05-10', // ISO 8601 date (YYYY-MM-DD) format.
+      'since': timeSpan[0], // ISO 8601 date (YYYY-MM-DD) format. Defaults to today - 6 days.
+      'until': timeSpan[1], // ISO 8601 date (YYYY-MM-DD) format.
       'page': '1',
       // 'display_hours': 'decimal',
     });
   }
+
+  List<String> _getLastWeekTimeSpan() {
+    var now = DateTime.now();
+    var sunday = now.subtract(Duration(days: now.weekday));
+    var since = DateFormat('yyyy-MM-dd').format(sunday.subtract(Duration(days: 7)));
+    var until = DateFormat('yyyy-MM-dd').format(sunday);
+    return [since, until];
+  }
+
 }
