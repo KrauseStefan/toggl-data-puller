@@ -7,7 +7,7 @@ import 'dart:convert';
 void main(List<String> arguments) async {
   try {
     var config = await ConfigurationReader.readConfiguration();
-    var client = TogglClient(config.apiKey, config.email);
+    var client = TogglClient(config.apiKey, config.email, DateTime.now());
     var body = await client.getDetailsReport('1636155');
 
     List<dynamic> entries = body['data'];

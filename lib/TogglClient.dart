@@ -14,8 +14,15 @@ const detailsUrl = '${reportsBaseUrl}/details';
 class TogglClient {
   String _authorizationHeaders;
   String _email;
+  DateTime _now;
 
-  TogglClient(String apiKey, String email) {
+  TogglClient(String apiKey, String email, DateTime nowOverride) {
+    if(nowOverride == null) {
+      _now = nowOverride;
+    } else {
+      _now = DateTime.now();
+    }
+
     _email = email;
     _authorizationHeaders = 'Basic ' + base64Encode(utf8.encode('$apiKey:api_token'));
   }
@@ -70,8 +77,7 @@ class TogglClient {
   }
 
   List<String> _getLastWeekTimeSpan() {
-    var now = DateTime.now();
-    var sunday = now.subtract(Duration(days: now.weekday));
+    var sunday = _now.subtract(Duration(days: _now.weekday));
     var since = DateFormat('yyyy-MM-dd').format(sunday.subtract(Duration(days: 7)));
     var until = DateFormat('yyyy-MM-dd').format(sunday);
     return [since, until];
