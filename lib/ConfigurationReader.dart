@@ -7,7 +7,6 @@ class Config {
 }
 
 class ConfigurationReader {
-  
   static Future<Config> readConfiguration() async {
     var configMap = await File('config.json')
       .readAsString()
@@ -20,4 +19,3 @@ class ConfigurationReader {
     return config;
   }
 }
-

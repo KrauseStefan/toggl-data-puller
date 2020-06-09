@@ -10,11 +10,8 @@ const testEmail = 'test@email.com';
 const testWorkspaceId = 'testWorkspaceID';
 
 class MockHttpClient extends Mock implements HttpClient {}
-
 class MockHttpClientRequest extends Mock implements HttpClientRequest {}
-
 class MockHttpClientResponse extends Mock implements HttpClientResponse {}
-
 class MockHttpHeaders extends Mock implements HttpHeaders {}
 
 void main() {
@@ -30,14 +27,18 @@ void main() {
     await HttpOverrides.runZoned(() async {
       when(httpClientRequestMock.headers).thenReturn(httpHeadersMock);
 
-      when(httpClientMock.getUrl(any)).thenAnswer((_) => Future.value(httpClientRequestMock));
+      when(httpClientMock.getUrl(any))
+          .thenAnswer((_) => Future.value(httpClientRequestMock));
 
-      when(httpClientRequestMock.close()).thenAnswer((_) => Future.value(httpClientResponseMock));
+      when(httpClientRequestMock.close())
+          .thenAnswer((_) => Future.value(httpClientResponseMock));
 
       var jsonStream = Stream.value(jsonExample);
-      when(httpClientResponseMock.transform(any)).thenAnswer((_) => jsonStream);
+      when(httpClientResponseMock.transform(any))
+        .thenAnswer((_) => jsonStream);
 
-      when(httpClientResponseMock.statusCode).thenReturn(200);
+      when(httpClientResponseMock.statusCode)
+        .thenReturn(200);
 
       var client = TogglClient(testApiKey, testEmail, DateTime.now());
       var result = await client.getDetailsReport(testWorkspaceId);

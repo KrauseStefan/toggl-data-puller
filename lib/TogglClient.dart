@@ -17,7 +17,7 @@ class TogglClient {
   DateTime _now;
 
   TogglClient(String apiKey, String email, DateTime nowOverride) {
-    if(nowOverride == null) {
+    if (nowOverride == null) {
       _now = nowOverride;
     } else {
       _now = DateTime.now();
@@ -59,8 +59,8 @@ class TogglClient {
     return await _sendRequest(summaryUrl, {
       'user_agent': _email,
       'workspace_id': workspaceId,
-      'since': timeSpan[0], // ISO 8601 date (YYYY-MM-DD) format. Defaults to today - 6 days.
-      'until': timeSpan[1], // ISO 8601 date (YYYY-MM-DD) format.
+      'since': timeSpan[0],
+      'until': timeSpan[1],
     });
   }
 
@@ -69,8 +69,8 @@ class TogglClient {
     return await _sendRequest(detailsUrl, {
       'user_agent': _email,
       'workspace_id': workspaceId,
-      'since': timeSpan[0], // ISO 8601 date (YYYY-MM-DD) format. Defaults to today - 6 days.
-      'until': timeSpan[1], // ISO 8601 date (YYYY-MM-DD) format.
+      'since': timeSpan[0],
+      'until': timeSpan[1],
       'page': '1',
       // 'display_hours': 'decimal',
     });
@@ -82,5 +82,4 @@ class TogglClient {
     var until = DateFormat('yyyy-MM-dd').format(sunday);
     return [since, until];
   }
-
 }
