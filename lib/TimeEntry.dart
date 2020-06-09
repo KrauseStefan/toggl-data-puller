@@ -8,6 +8,8 @@ const weekdays = [
   'Sunday',
 ];
 
+var jiraIdRegex = RegExp(r'\w{4}-\d+');
+
 class TimeEntry {
   String project;
   String description;
@@ -32,10 +34,15 @@ class TimeEntry {
     return weekdays[start.weekday];
   }
 
+  String getJiraId() {
+    return jiraIdRegex.firstMatch(description)?.group(0);
+  }
+
   Map<String, dynamic> toJson() => {
-        'Project': project,
-        'Descriptioin': description,
-        'Duration': getDurationString(),
-        // 'Weekday': getWeekday(),
-      };
+    'Project': project,
+    'Descriptioin': description,
+    'Duration': getDurationString(),
+    'JiraId': getJiraId(),
+    // 'Weekday': getWeekday(),
+  };
 }
