@@ -39,7 +39,7 @@ void main() {
 
       when(httpClientResponseMock.statusCode).thenReturn(200);
 
-      var client = TogglClient(testApiKey, testEmail);
+      var client = TogglClient(testApiKey, testEmail, DateTime.now());
       var result = await client.getDetailsReport(testWorkspaceId);
 
       var queryMap = extractQueryParams(httpClientMock);
