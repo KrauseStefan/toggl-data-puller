@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:togglTool/TogglError.dart';
+import 'package:togglTool/toggl/TogglError.dart';
 import 'package:intl/intl.dart';
 
 const domain = 'api.track.toggl.com';
@@ -11,12 +11,12 @@ const detailsUrl = '$reportsBaseUrl/details';
 
 // https://github.com/toggl/toggl_api_docs/blob/master/reports.md#request-parameters
 
-class TogglClient {
+class TogglRestClient {
   String _authorizationHeaders;
   String _email;
   DateTime _now;
 
-  TogglClient(String apiKey, String email, DateTime nowOverride) {
+  TogglRestClient(String apiKey, String email, DateTime nowOverride) {
     if (nowOverride == null) {
       _now = nowOverride;
     } else {
@@ -24,22 +24,25 @@ class TogglClient {
     }
 
     _email = email;
-    _authorizationHeaders = 'Basic ' + base64Encode(utf8.encode('$apiKey:api_token'));
+    _authorizationHeaders =
+        'Basic ' + base64Encode(utf8.encode('$apiKey:api_token'));
   }
 
   bool _requestSucessfull(HttpClientResponse resp) {
     return resp.statusCode >= 200 && resp.statusCode < 300;
   }
 
-  Future<Map<String, dynamic>> _sendRequest(String url, Map<String, String> query) async {
-    var uri = Uri.https(domain, url, query);
+  Future<Map<String, dynamic>> _sendRequest(
+      String url, Map<String, String> query) async {
+    final uri = Uri.https(domain, url, query);
 
-    var req = await HttpClient().getUrl(uri);
+    final req = await HttpClient().getUrl(uri);
     req.headers.add('authorization', _authorizationHeaders);
 
-    var resp = await req.close();
-    var responseStr = await resp.transform(Utf8Decoder()).reduce((prev, cur) => prev + cur);
-    var responseData = jsonDecode(responseStr);
+    final resp = await req.close();
+    final responseStr =
+        await resp.transform(Utf8Decoder()).reduce((prev, cur) => prev + cur);
+    final responseData = jsonDecode(responseStr);
     if (_requestSucessfull(resp)) {
       return responseData;
     }
@@ -55,7 +58,7 @@ class TogglClient {
   }
 
   Future<Map<String, dynamic>> getSummaryReport(String workspaceId) async {
-    var timeSpan = _getLastWeekTimeSpan();
+    final timeSpan = _getLastWeekTimeSpan();
     return await _sendRequest(summaryUrl, {
       'user_agent': _email,
       'workspace_id': workspaceId,
@@ -65,7 +68,7 @@ class TogglClient {
   }
 
   Future<Map<String, dynamic>> getDetailsReport(String workspaceId) async {
-    var timeSpan = _getLastWeekTimeSpan();
+    final timeSpan = _getLastWeekTimeSpan();
     return await _sendRequest(detailsUrl, {
       'user_agent': _email,
       'workspace_id': workspaceId,
@@ -77,9 +80,10 @@ class TogglClient {
   }
 
   List<String> _getLastWeekTimeSpan() {
-    var sunday = _now.subtract(Duration(days: _now.weekday));
-    var since = DateFormat('yyyy-MM-dd').format(sunday.subtract(Duration(days: 7)));
-    var until = DateFormat('yyyy-MM-dd').format(sunday);
+    final sunday = _now.subtract(Duration(days: _now.weekday));
+    final since =
+        DateFormat('yyyy-MM-dd').format(sunday.subtract(Duration(days: 7)));
+    final until = DateFormat('yyyy-MM-dd').format(sunday);
     return [since, until];
   }
 }

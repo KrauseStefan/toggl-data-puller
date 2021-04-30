@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:test/test.dart';
-import 'package:togglTool/TogglClient.dart';
+import 'package:togglTool/toggl/TogglRestClient.dart';
 import 'package:mockito/mockito.dart';
 
 const testApiKey = 'jkdsjno3niod990';
@@ -10,8 +10,11 @@ const testEmail = 'test@email.com';
 const testWorkspaceId = 'testWorkspaceID';
 
 class MockHttpClient extends Mock implements HttpClient {}
+
 class MockHttpClientRequest extends Mock implements HttpClientRequest {}
+
 class MockHttpClientResponse extends Mock implements HttpClientResponse {}
+
 class MockHttpHeaders extends Mock implements HttpHeaders {}
 
 void main() {
@@ -20,7 +23,8 @@ void main() {
   var httpClientResponseMock = MockHttpClientResponse();
   var httpHeadersMock = MockHttpHeaders();
 
-  var authHeader = 'Basic ' + base64Encode(utf8.encode('$testApiKey:api_token'));
+  var authHeader =
+      'Basic ' + base64Encode(utf8.encode('$testApiKey:api_token'));
   const jsonExample = '{"unique": "value"}';
 
   test('getDetailsReport', () async {
@@ -34,19 +38,18 @@ void main() {
           .thenAnswer((_) => Future.value(httpClientResponseMock));
 
       var jsonStream = Stream.value(jsonExample);
-      when(httpClientResponseMock.transform(any))
-        .thenAnswer((_) => jsonStream);
+      when(httpClientResponseMock.transform(any)).thenAnswer((_) => jsonStream);
 
-      when(httpClientResponseMock.statusCode)
-        .thenReturn(200);
+      when(httpClientResponseMock.statusCode).thenReturn(200);
 
-      var client = TogglClient(testApiKey, testEmail, DateTime.now());
+      var client = TogglRestClient(testApiKey, testEmail, DateTime.now());
       var result = await client.getDetailsReport(testWorkspaceId);
 
       var queryMap = extractQueryParams(httpClientMock);
       expectToContainKeyValuePair(queryMap, 'user_agent', testEmail);
 
-      var headerKeyValuePair = verify(httpHeadersMock.add(captureAny, captureAny)).captured;
+      var headerKeyValuePair =
+          verify(httpHeadersMock.add(captureAny, captureAny)).captured;
       expect(headerKeyValuePair[0], 'authorization');
       expect(headerKeyValuePair[1], authHeader);
 
@@ -56,7 +59,8 @@ void main() {
   });
 }
 
-void expectToContainKeyValuePair<A, B>(Iterable<MapEntry<A, B>> map, A key, B value) {
+void expectToContainKeyValuePair<A, B>(
+    Iterable<MapEntry<A, B>> map, A key, B value) {
   try {
     var entry = map.singleWhere((e) => e.key == key);
     expect(entry.key, key);
@@ -67,7 +71,8 @@ void expectToContainKeyValuePair<A, B>(Iterable<MapEntry<A, B>> map, A key, B va
   }
 }
 
-Iterable<MapEntry<String, String>> extractQueryParams(MockHttpClient httpClientMock) {
+Iterable<MapEntry<String, String>> extractQueryParams(
+    MockHttpClient httpClientMock) {
   Uri uri = verify(httpClientMock.getUrl(captureAny)).captured[0];
   return uri.queryParameters.entries;
 }
