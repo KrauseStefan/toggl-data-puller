@@ -16,6 +16,14 @@ class ConfigurationReader {
     config.email = configMap['email'];
     config.apiKey = configMap['apikey'];
 
+    if(config.email == null || config.email == '') {
+      print('Missing email field in "config.json"');
+    }
+
+    if(config.apiKey == null || config.apiKey == '') {
+      print('Missing apikey field in "config.json"');
+    }
+
     return config;
   }
 }

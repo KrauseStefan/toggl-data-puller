@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:togglTool/TogglError.dart';
 import 'package:intl/intl.dart';
 
-const domain = 'toggl.com';
+const domain = 'api.track.toggl.com';
 const reportsBaseUrl = 'reports/api/v2';
-const weeklyUrl = '${reportsBaseUrl}/weekly';
-const summaryUrl = '${reportsBaseUrl}/summary';
-const detailsUrl = '${reportsBaseUrl}/details';
+const weeklyUrl = '$reportsBaseUrl/weekly';
+const summaryUrl = '$reportsBaseUrl/summary';
+const detailsUrl = '$reportsBaseUrl/details';
 
 // https://github.com/toggl/toggl_api_docs/blob/master/reports.md#request-parameters
 
