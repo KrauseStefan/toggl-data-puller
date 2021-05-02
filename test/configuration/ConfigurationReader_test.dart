@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:built_value/serializer.dart';
 import 'package:test/test.dart';
 import 'package:togglTool/configuration/ConfigurationReader.dart';
 
 void main() {
   Directory.current = 'test/configuration';
-
-  final throwsAssertionError = throwsA(TypeMatcher<AssertionError>());
 
   test('read Properties', () async {
     final config = await ConfigurationReader.readConfiguration();
@@ -15,17 +14,4 @@ void main() {
     expect(config.apiKey, '123456569832893278');
   });
 
-  test('fail on missing email', () async {
-    expect(
-        ConfigurationReader.readConfigurationFromFile(
-            'config-missing-email.json'),
-        throwsAssertionError);
-  });
-
-  test('fail on missing apiKey', () async {
-    expect(
-        ConfigurationReader.readConfigurationFromFile(
-            'config-missing-apiKey.json'),
-        throwsAssertionError);
-  });
 }

@@ -1,24 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:togglTool/serializers/serializers.dart';
+
 import 'ConfigurationFile.dart';
 
 class ConfigurationReader {
   static Future<ConfigurationFile> readConfigurationFromFile(
       String configurationFile) async {
-    final configMap = await File(configurationFile)
-        .readAsString()
-        .then((content) => jsonDecode(content));
+    final content = await File(configurationFile).readAsString();
 
-    final config = ConfigurationFile(configMap['email'], configMap['apiKey']);
-
-    if (config.email == null || config.email == '') {
-      throw AssertionError('Missing email field in "config.json"');
-    }
-
-    if (config.apiKey == null || config.apiKey == '') {
-      throw AssertionError('Missing apiKey field in "config.json"');
-    }
+    final config = serializers.deserializeWith(
+        ConfigurationFile.serializer, json.decode(content));
 
     return config;
   }
