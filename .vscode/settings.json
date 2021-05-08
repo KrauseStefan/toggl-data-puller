@@ -3,5 +3,8 @@
     "bazel",
     "dart",
     "diagram"
+  ],
+  "cSpell.words": [
+    "Toggl"
   ]
 }
