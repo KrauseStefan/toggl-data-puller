@@ -42,8 +42,8 @@ void main() {
 
       when(httpClientResponseMock.statusCode).thenReturn(200);
 
-      var client = TogglRestClient(testApiKey, testEmail, DateTime.now());
-      var result = await client.getDetailsReport(testWorkspaceId);
+      var client = TogglRestClient(testApiKey, testEmail);
+      var result = await client.getDetailsReport(testWorkspaceId, ['', '']);
 
       var queryMap = extractQueryParams(httpClientMock);
       expectToContainKeyValuePair(queryMap, 'user_agent', testEmail);

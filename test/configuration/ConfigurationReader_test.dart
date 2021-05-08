@@ -13,5 +13,4 @@ void main() {
     expect(config.email, 'example@gmail.com');
     expect(config.apiKey, '123456569832893278');
   });
-
 }
