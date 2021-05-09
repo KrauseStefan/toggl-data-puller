@@ -1,12 +1,20 @@
-const weekdays = [
-  'Tuesday',
-  'Monday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
+enum Weekday {
+  Tuesday,
+  Monday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+}
+
+const weekdays = Weekday.values;
+
+extension ParseToString on Weekday {
+  String toJson() {
+    return toString().split('.').last;
+  }
+}
 
 class TimeEntry {
   static final _jiraIdRegex = RegExp(r'\w{4}-\d+');
@@ -19,6 +27,12 @@ class TimeEntry {
   TimeEntry(
       this.project, this.description, this.millisecondsDuration, this.start);
 
+  TimeEntry.FromJson(dynamic entry)
+      : project = entry['project'],
+        description = entry['description'],
+        millisecondsDuration = entry['dur'],
+        start = DateTime.parse(entry['start']);
+
   String getDurationString() {
     final secs = millisecondsDuration ~/ 1000;
     final mins = secs ~/ 60;
@@ -26,7 +40,7 @@ class TimeEntry {
     return '$hours:${mins % 60}:${secs % 60}';
   }
 
-  String getWeekday() {
+  Weekday getWeekday() {
     return weekdays[start.weekday];
   }
 

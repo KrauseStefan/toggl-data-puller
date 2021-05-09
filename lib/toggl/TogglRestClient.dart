@@ -48,7 +48,8 @@ class TogglRestClient {
     });
   }
 
-  Future<Map<String, dynamic>> getSummaryReport(final String workspaceId, final List<String> timeSpan) async {
+  Future<Map<String, dynamic>> getSummaryReport(
+      final String workspaceId, final List<String> timeSpan) async {
     return await _sendRequest(summaryUrl, {
       'user_agent': email,
       'workspace_id': workspaceId,
@@ -57,7 +58,8 @@ class TogglRestClient {
     });
   }
 
-  Future<Map<String, dynamic>> getDetailsReport(final String workspaceId, final List<String> timeSpan) async {
+  Future<Map<String, dynamic>> getDetailsReport(
+      final String workspaceId, final List<String> timeSpan) async {
     return await _sendRequest(detailsUrl, {
       'user_agent': email,
       'workspace_id': workspaceId,

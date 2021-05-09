@@ -13,6 +13,18 @@ List<String> getLastWeekTimeSpan(final DateTime now) {
   return [since, until];
 }
 
+Object mapper(dynamic object) {
+  if (object is Map<Weekday, dynamic>) {
+    return object.map((weekday, value) => MapEntry(weekday.toJson(), value));
+  }
+  return object.toJson();
+}
+
+void printJson(Map<dynamic, dynamic> json) {
+  final prettyprint = JsonEncoder.withIndent('  ', mapper).convert(json);
+  print(prettyprint);
+}
+
 void main(List<String> arguments) async {
   const togglWorkspaceID = '1636155';
 
@@ -23,12 +35,10 @@ void main(List<String> arguments) async {
     final config = await ConfigurationReader.readConfiguration();
     final togglClient = TogglRestClient(config.apiKey, config.email);
     final body = await togglClient.getDetailsReport(togglWorkspaceID, timespan);
-
     final mappedEntries = DataConverter().doConversion(body);
 
-    final prettyprint = JsonEncoder.withIndent('  ').convert(mappedEntries);
+    printJson(mappedEntries);
 
-    print(prettyprint);
     exit(0);
   } catch (e) {
     print(e);
