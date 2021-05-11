@@ -21,20 +21,19 @@ class TimeEntry {
 
   final String project;
   final String description;
-  int millisecondsDuration;
+  final int duration; // ms
   final DateTime start;
 
-  TimeEntry(
-      this.project, this.description, this.millisecondsDuration, this.start);
+  const TimeEntry({this.project, this.description, this.duration, this.start});
 
   TimeEntry.FromJson(dynamic entry)
       : project = entry['project'],
         description = entry['description'],
-        millisecondsDuration = entry['dur'],
+        duration = entry['dur'],
         start = DateTime.parse(entry['start']);
 
   String getDurationString() {
-    final secs = millisecondsDuration ~/ 1000;
+    final secs = duration ~/ 1000;
     final mins = secs ~/ 60;
     final hours = mins ~/ 60;
     return '$hours:${mins % 60}:${secs % 60}';
@@ -46,6 +45,15 @@ class TimeEntry {
 
   String getJiraId() {
     return _jiraIdRegex.firstMatch(description)?.group(0);
+  }
+
+  TimeEntry copyWithDuration(int duration) {
+    return TimeEntry(
+      project: project,
+      description: description,
+      duration: duration,
+      start: start,
+    );
   }
 
   Map<String, dynamic> toJson() => {

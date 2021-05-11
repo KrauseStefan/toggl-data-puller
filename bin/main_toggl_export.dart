@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:togglTool/configuration/ConfigurationReader.dart';
+import 'package:togglTool/dto/TimeEntry.dart';
 import 'package:togglTool/toggl/TogglDataConverter.dart';
 import 'package:togglTool/toggl/TogglRestClient.dart';
 import 'dart:io';
@@ -35,14 +36,15 @@ void main(List<String> arguments) async {
     final config = await ConfigurationReader.readConfiguration();
     final togglClient = TogglRestClient(config.apiKey, config.email);
     final body = await togglClient.getDetailsReport(togglWorkspaceID, timespan);
-    final mappedEntries = DataConverter().doConversion(body);
+    final timeEntries = DataConverter.parseTimeEntries(body);
+    final weekOverview = DataConverter.getWeekOverview(timeEntries);
+    printJson(weekOverview);
 
-    printJson(mappedEntries);
 
     exit(0);
   } catch (e) {
     print(e);
-  } finally {
+    print(e.stackTrace.toString());
     exit(-1);
   }
 }
