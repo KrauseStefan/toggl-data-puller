@@ -7,13 +7,11 @@ This is Work in progress, the intention is to in the end af first half of a pipe
 To initialize run:
 
 ``` bash
-flutter pub get
-flutter packages pub run build_runner build
+dart pub get
+dart pub run build_runner build
 ```
 
 To run: `dart bin/main_toggl_export.dart`
-To run tests: `pub run test test`
+To run tests: `dart run test test`
 
 To format run `dartfmt .`
-
-Note: These commands assume running through flutter, they all are possible to use without the flutter command/framework.
